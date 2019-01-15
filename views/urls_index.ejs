@@ -5,10 +5,11 @@
   <% include ./partials/_header.ejs %>
 </head>
 <body>
-    <table> 
+    <table border='1'> 
       <% for(let element in urls) { %>
         <tr> 
-          <td><%= element %>&nbsp;&nbsp;&nbsp;&nbsp;<%= urls[element]%></td>
+          <td><%= element %></td>
+          <td><%= urls[element]%></td>
         </tr>
       <% } %>
     </table>

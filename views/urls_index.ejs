@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>urls_index</title>
+  <% include ./partials/_header.ejs %>
+</head>
+<body>
+    <table> 
+      <% for(let element in urls) { %>
+        <tr> 
+          <td><%= element %>&nbsp;&nbsp;&nbsp;&nbsp;<%= urls[element]%></td>
+        </tr>
+      <% } %>
+    </table>
+</body>
+</html>

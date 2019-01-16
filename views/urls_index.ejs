@@ -5,13 +5,18 @@
   <% include ./partials/_header.ejs %>
 </head>
 <body>
-    <table border='1'> 
-      <% for(let element in urls) { %>
-        <tr> 
-          <td><%= element %></td>
-          <td><%= urls[element]%></td>
-        </tr>
-      <% } %>
-    </table>
+  <table border='1'> 
+    <% for(let element in urls) { %>
+      <tr> 
+        <td><%= element %></td>
+        <td><%= urls[element]%></td>
+        <td>
+            <form method="POST" action="/urls/<%= element%>/delete">
+              <button>delete</button>
+            </form>
+        </td>
+      </tr>
+    <% } %>
+  </table>
 </body>
 </html>

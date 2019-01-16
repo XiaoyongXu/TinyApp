@@ -58,15 +58,20 @@ app.get("/u/:shortURL", (req, res) => {
 app.post("/urls", (req, res) => {
   // console.log(req.body.longURL);  // debug statement to see POST parameters
   var string = generateRandomString();
-  urlDatabase[string] = req.body.longURL;
-  // console.log(urlDatabase);  
+  urlDatabase[string] = req.body.longURL; 
   res.redirect("/urls/"+string);        // Respond with 'Ok' (we will replace this)
 });
 
 app.post("/urls/:id/delete", (req, res) => {
   let i = req.params.id;
+  console.log(i);
   delete urlDatabase[i];
   res.redirect("/urls/");         // Respond with 'Ok' (we will replace this)
+});
+
+app.post("/urls/:id", (req, res) => {
+  urlDatabase[req.params.id] = req.body.longURL;
+  res.redirect("/urls/");        
 });
 
 app.listen(PORT, () => {

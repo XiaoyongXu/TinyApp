@@ -11,6 +11,11 @@
         <td><%= element %></td>
         <td><%= urls[element]%></td>
         <td>
+            <form method="get">
+              <a href="/urls/<%= element%>">edit</a>
+            </form>
+        </td>
+        <td>
             <form method="POST" action="/urls/<%= element%>/delete">
               <button>delete</button>
             </form>
@@ -18,5 +23,6 @@
       </tr>
     <% } %>
   </table>
+  
 </body>
 </html>

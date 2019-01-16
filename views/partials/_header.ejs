@@ -1,5 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>header</title>
-</head>
+<% if (username !== undefined){%>
+  <%= username%>
+  <form method="POST" action="/logout">
+    <button>logout</button>
+  </form>
+<%}else{%>
+  
+
+  <form method="POST" action="/login">
+    <lable for username>username</lable>
+    <input type = "text", name ="username">
+    <button>login</button>
+  </form>
+<%}%>

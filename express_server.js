@@ -14,6 +14,12 @@ let urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+app.use(function(req, res, next){
+  res.locals.user = users[req.cookies["user_id"]];
+  res.locals.urls = urlDatabase;
+  next();
+});
+
 let users = { 
   "userRandomID": {
     id: "userRandomID", 
@@ -40,34 +46,21 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/hello", (req, res) => {
-  let templateVars = {
-    username: req.cookies["username"],
-    // ... any other vars
-  };
-  res.render("urls_index", templateVars);
+  res.render("urls_index");
 });
 
 app.get("/urls", (req, res) => {
-  let templateVars = { 
-    urls: urlDatabase,
-    username: req.cookies["username"]
-  };
-  res.render("urls_index", templateVars);
+  res.render("urls_index");
 });
 
 app.get("/urls/new", (req, res) => {
-  let templateVars = { 
-    urls: urlDatabase,
-    username: req.cookies["username"]
-  };
-  res.render("urls_new",templateVars);
+  res.render("urls_new");
 });
 
 app.get("/urls/:id", (req, res) => {
   let templateVars = { 
     shortURL: req.params.id, 
     longURL: urlDatabase[req.params.id],
-    username: req.cookies["username"]
   };
   res.render("urls_show", templateVars);
 });
@@ -85,11 +78,7 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-  let templateVars = {
-    username: req.cookies["username"],
-    // ... any other vars
-  };
-  res.render("user_registration", templateVars);
+  res.render("user_registration");
 });
 
 app.post("/urls", (req, res) => {
@@ -112,40 +101,41 @@ app.post("/urls/:id", (req, res) => {
 });
 
 app.post('/login', function (req, res) {
-  res.cookie('username', req.body.username);
+
+  res.cookie('user_id', req.body.user.user_id);
+
   res.redirect("/urls");
 });
 
 app.post('/logout', function (req, res) {
-  res.clearCookie('username');
+  res.clearCookie('user_id');
   res.redirect("/urls");
 });
 
 app.post("/register", (req, res) => {
-  let templateVars = {
-    username: req.cookies["username"],
-  };
+  
   let user_id = generateRandomString();
   let sameEmail = false;
-  for (element in users){
-    if (element.email === req.body.email){
-      sameEmail = ture;
+  for (let key in users){
+    let value = users[key];
+    if (value.email === req.body.email){
+      sameEmail = true;
     }
   }
   if(req.body.email === "" ||req.body.password === ""){
     res.statusCode = 400;
-    res.send("error 400");
-  } else if(req.body.email){
+    res.send("err 400");
+  } else if(sameEmail){
     res.statusCode = 400;
-    res.send("error 400");
+    res.send("err 400");
   } else{
     users[user_id] ={
       id: user_id,
       email: req.body.email,
       password: req.body.password
   }
-    console.log(users);
-    res.cookie('user_id',generateRandomString());
+    //console.log(users);
+    res.cookie('user_id',user_id);
     res.redirect("/urls");
   }
 });

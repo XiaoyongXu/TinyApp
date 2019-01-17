@@ -1,14 +1,12 @@
-<% if (username !== undefined){%>
-  <%= username%>
+<% if (user!== undefined){%>
+  <%= user.id%>
   <form method="POST" action="/logout">
     <button>logout</button>
   </form>
 <%}else{%>
-  
-
   <form method="POST" action="/login">
-    <lable for username>username</lable>
-    <input type = "text", name ="username">
+    <lable for user[user_id]>user_id</lable>
+    <input type = "text", name ="user[user_id]">
     <button>login</button>
   </form>
 <%}%>

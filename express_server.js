@@ -9,10 +9,23 @@ app.set("view engine", "ejs")
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
-var urlDatabase = {
+let urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
+
+let users = { 
+  "userRandomID": {
+    id: "userRandomID", 
+    email: "user@example.com", 
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID", 
+    email: "user2@example.com", 
+    password: "dishwasher-funk"
+  }
+}
 
 app.get("/", (req, res) => {
   res.send("Hello!");
@@ -71,6 +84,14 @@ app.get("/u/:shortURL", (req, res) => {
   
 });
 
+app.get("/register", (req, res) => {
+  let templateVars = {
+    username: req.cookies["username"],
+    // ... any other vars
+  };
+  res.render("user_registration", templateVars);
+});
+
 app.post("/urls", (req, res) => {
   // console.log(req.body.longURL);  // debug statement to see POST parameters
   var string = generateRandomString();
@@ -98,6 +119,35 @@ app.post('/login', function (req, res) {
 app.post('/logout', function (req, res) {
   res.clearCookie('username');
   res.redirect("/urls");
+});
+
+app.post("/register", (req, res) => {
+  let templateVars = {
+    username: req.cookies["username"],
+  };
+  let user_id = generateRandomString();
+  let sameEmail = false;
+  for (element in users){
+    if (element.email === req.body.email){
+      sameEmail = ture;
+    }
+  }
+  if(req.body.email === "" ||req.body.password === ""){
+    res.statusCode = 400;
+    res.send("error 400");
+  } else if(req.body.email){
+    res.statusCode = 400;
+    res.send("error 400");
+  } else{
+    users[user_id] ={
+      id: user_id,
+      email: req.body.email,
+      password: req.body.password
+  }
+    console.log(users);
+    res.cookie('user_id',generateRandomString());
+    res.redirect("/urls");
+  }
 });
 
 

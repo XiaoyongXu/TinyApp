@@ -3,14 +3,14 @@
 <head>
   <title>urls_show</title>
 </head>
-<body>
+<body style="font-size:20px; padding:50px;">
     <% include ./partials/_header.ejs %>
     <table> 
           <tr> 
             <td>ShortURL: <%=shortURL%></td>
           </tr>
     </table>
-    <form method="POST" action="/urls/<%=shortURL%>">
+    <form method="POST" action="/urls/<%=shortURL%>" style="margin:150px;">
       <lable for longtURL>longURL</lable>
       <input type = "text", name ="longURL">
       <button>update</button>

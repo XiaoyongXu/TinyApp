@@ -5,26 +5,34 @@
 </head>
 <body style="font-size:20px; padding:50px;">
   <% include ./partials/_header.ejs %>
+  <form method="get" action="/urls/new">
+    <button>new</button>
+  </form>
   <table border='1'> 
-    <% for(let element of urls) { %>
-      <tr> 
-        <td><%= element.id %></td>
-        <td><%= element.url%></td>
-        <td>
+    <% for(let element in urls) { %>
+       
+        <% for(let index of urls[element].url){%>
+        <tr>
+          <td><%= element %></td>
           
-            <form method="get">
-                <% if (user){%>
-                  <a href="/urls/<%= element.id%>">edit</a>
-                <%}%>
+          <td><%= index%></td>
+          <td>
+            
+              <form method="get">
+                  <% if (user){%>
+                    <a href="/urls/<%= element%>">edit</a>
+                  <%}%>
+                </form>
+            
+          </td>
+          <td>
+              <form method="POST" action="/urls/<%= element%>/delete">
+                <button>delete</button>
               </form>
-          
-        </td>
-        <td>
-            <form method="POST" action="/urls/<%= element.id%>/delete">
-              <button>delete</button>
-            </form>
-        </td>
-      </tr>
+          </td>
+        </tr>
+      <%}%>
+      
     <% } %>
   </table>
   

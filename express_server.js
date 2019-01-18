@@ -10,26 +10,35 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
 
-let urlDatabase = [ 
-  {id:"b2xVn2",
-    url: "http://www.lighthouselabs.ca"
+let urlDatabase = { 
+  "b2xVn2":{
+    id:"b2xVn2",
+    url: ["http://www.lighthouselabs.ca"]
   },
-  {id:"9sm5xK",
-    url:"http://www.google.com"
+  "9sm5xK": {
+    id:"9sm5xK",
+    url:["http://www.google.com"]
+  },
+  "tony25":{
+    id: "tony25",
+    url:["www.123.com"]
   }
-]
+
+}
 
 
 
 app.use(function(req, res, next){
-  let loginUrls = [];
-  for (element of urlDatabase){
-    console.log("element: ", element,"req.cook: ",req.cookies["user_id"]);
-    if (element.id === req.cookies["user_id"]){
-      loginUrls.push(element);
+  let loginUrls = {};
+  for (element in urlDatabase){
+    // console.log("element: ", element,"req.cook: ",req.cookies["user_id"]);
+    if (element === req.cookies["user_id"]){
+      loginUrls[req.cookies["user_id"]]=urlDatabase[element];
     }
+
+    
   } 
-  console.log(loginUrls);
+  // console.log(loginUrls);
   res.locals.user = users[req.cookies["user_id"]];
   res.locals.urls = loginUrls;
   
@@ -45,6 +54,11 @@ let users = {
  "user2RandomID": {
     id: "user2RandomID", 
     email: "user2@example.com", 
+    password: "123"
+  },
+  "tony25": {
+    id:"tony25",
+    email: "tonyx258@foxmail.com",
     password: "123"
   }
 }
@@ -87,9 +101,9 @@ app.get("/login", (req, res) => {
 app.get("/urls/:id", (req, res) => {
   let templateVars = { 
     shortURL: req.params.id, 
-    longURL: urlDatabase[req.params.id],
-
+    longURL: urlDatabase[req.params.id].url,
   };
+  // console.log(templateVars.longURL);
   res.render("urls_show", templateVars);
 });
 
@@ -111,20 +125,22 @@ app.get("/register", (req, res) => {
 
 app.post("/urls", (req, res) => {
   // console.log(req.body.longURL);  // debug statement to see POST parameters
-  let obj={id:req.cookies.user_id,url:req.body.longURL}
-  urlDatabase.push(obj); 
+  urlDatabase[req.cookies.user_id].url.push(req.body.longURL);
+  // console.log(urlDatabase);
   res.redirect("/urls/"+req.cookies.user_id);        // Respond with 'Ok' (we will replace this)
 });
 
 app.post("/urls/:id/delete", (req, res) => {
   let i = req.params.id;
+  console.log(i);
   delete urlDatabase[i];
+  
   res.redirect("/urls/");         // Respond with 'Ok' (we will replace this)
 });
 
 app.post("/urls/:id", (req, res) => {
   if (req.cookies){
-    urlDatabase[req.params.id] = req.body.longURL;
+    urlDatabase[req.params.id].url[1] = req.body.longURL;
     res.redirect("/urls");
   }else{
     redirect("/urls");

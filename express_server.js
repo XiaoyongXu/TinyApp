@@ -9,10 +9,13 @@ app.set("view engine", "ejs")
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
+
 let urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
+
+
 
 app.use(function(req, res, next){
   res.locals.user = users[req.cookies["user_id"]];
@@ -29,7 +32,7 @@ let users = {
  "user2RandomID": {
     id: "user2RandomID", 
     email: "user2@example.com", 
-    password: "dishwasher-funk"
+    password: "123"
   }
 }
 
@@ -57,10 +60,18 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
 
+app.get("/login", (req, res) => {
+  res.render("user_login");
+});
+
+
+
+
 app.get("/urls/:id", (req, res) => {
   let templateVars = { 
     shortURL: req.params.id, 
     longURL: urlDatabase[req.params.id],
+
   };
   res.render("urls_show", templateVars);
 });
@@ -90,7 +101,6 @@ app.post("/urls", (req, res) => {
 
 app.post("/urls/:id/delete", (req, res) => {
   let i = req.params.id;
-  console.log(i);
   delete urlDatabase[i];
   res.redirect("/urls/");         // Respond with 'Ok' (we will replace this)
 });
@@ -100,16 +110,35 @@ app.post("/urls/:id", (req, res) => {
   res.redirect("/urls");        
 });
 
-app.post('/login', function (req, res) {
-
-  res.cookie('user_id', req.body.user.user_id);
-
-  res.redirect("/urls");
-});
-
 app.post('/logout', function (req, res) {
   res.clearCookie('user_id');
   res.redirect("/urls");
+});
+
+
+app.post("/login", (req, res) => {
+
+  if(!req.body.email || !req.body.password){
+  } else {
+    let flag = false;
+    let foundUser;
+    //check it with the database
+    for(var key in users){
+        if(users[key].email===req.body.email && users[key].password===req.body.password){
+          flag = true;
+          foundUser = users[key];
+          
+        }
+    }
+    if(flag){
+      res.cookie("user_id",foundUser.id)
+      res.redirect("/urls");
+      
+    } else{
+      res.send("please enter the correct userID and pwd")
+    }
+    //checking of the username and password from db ends here.
+  }
 });
 
 app.post("/register", (req, res) => {
@@ -133,7 +162,7 @@ app.post("/register", (req, res) => {
       id: user_id,
       email: req.body.email,
       password: req.body.password
-  }
+    }
     //console.log(users);
     res.cookie('user_id',user_id);
     res.redirect("/urls");

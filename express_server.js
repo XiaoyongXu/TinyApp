@@ -10,16 +10,29 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
 
-let urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
-};
+let urlDatabase = [ 
+  {id:"b2xVn2",
+    url: "http://www.lighthouselabs.ca"
+  },
+  {id:"9sm5xK",
+    url:"http://www.google.com"
+  }
+]
 
 
 
 app.use(function(req, res, next){
+  let loginUrls = [];
+  for (element of urlDatabase){
+    console.log("element: ", element,"req.cook: ",req.cookies["user_id"]);
+    if (element.id === req.cookies["user_id"]){
+      loginUrls.push(element);
+    }
+  } 
+  console.log(loginUrls);
   res.locals.user = users[req.cookies["user_id"]];
-  res.locals.urls = urlDatabase;
+  res.locals.urls = loginUrls;
+  
   next();
 });
 
@@ -57,7 +70,11 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  if (req.cookies){
+    res.render("urls_new");
+  }else{
+    res.redirect("/login");
+  }
 });
 
 app.get("/login", (req, res) => {
@@ -94,9 +111,9 @@ app.get("/register", (req, res) => {
 
 app.post("/urls", (req, res) => {
   // console.log(req.body.longURL);  // debug statement to see POST parameters
-  var string = generateRandomString();
-  urlDatabase[string] = req.body.longURL; 
-  res.redirect("/urls/"+string);        // Respond with 'Ok' (we will replace this)
+  let obj={id:req.cookies.user_id,url:req.body.longURL}
+  urlDatabase.push(obj); 
+  res.redirect("/urls/"+req.cookies.user_id);        // Respond with 'Ok' (we will replace this)
 });
 
 app.post("/urls/:id/delete", (req, res) => {
@@ -106,8 +123,13 @@ app.post("/urls/:id/delete", (req, res) => {
 });
 
 app.post("/urls/:id", (req, res) => {
-  urlDatabase[req.params.id] = req.body.longURL;
-  res.redirect("/urls");        
+  if (req.cookies){
+    urlDatabase[req.params.id] = req.body.longURL;
+    res.redirect("/urls");
+  }else{
+    redirect("/urls");
+  }
+          
 });
 
 app.post('/logout', function (req, res) {

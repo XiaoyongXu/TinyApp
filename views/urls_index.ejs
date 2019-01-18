@@ -6,17 +6,21 @@
 <body style="font-size:20px; padding:50px;">
   <% include ./partials/_header.ejs %>
   <table border='1'> 
-    <% for(let element in urls) { %>
+    <% for(let element of urls) { %>
       <tr> 
-        <td><%= element %></td>
-        <td><%= urls[element]%></td>
+        <td><%= element.id %></td>
+        <td><%= element.url%></td>
         <td>
+          
             <form method="get">
-              <a href="/urls/<%= element%>">edit</a>
-            </form>
+                <% if (user){%>
+                  <a href="/urls/<%= element.id%>">edit</a>
+                <%}%>
+              </form>
+          
         </td>
         <td>
-            <form method="POST" action="/urls/<%= element%>/delete">
+            <form method="POST" action="/urls/<%= element.id%>/delete">
               <button>delete</button>
             </form>
         </td>

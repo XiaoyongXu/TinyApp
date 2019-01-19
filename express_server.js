@@ -1,5 +1,6 @@
 var express = require("express");
 var cookieParser = require('cookie-parser')
+const bcrypt = require('bcrypt');
 var app = express();
 var PORT = 8080; // default port 8080
 
@@ -169,7 +170,7 @@ app.post("/login", (req, res) => {
     let foundUser;
     //check it with the database
     for(var key in users){
-        if(users[key].email===req.body.email && users[key].password===req.body.password){
+        if(users[key].email===req.body.email && bcrypt.compareSync(users[key].password,req.body.password)){
           flag = true;
           foundUser = users[key];
           
@@ -190,6 +191,7 @@ app.post("/register", (req, res) => {
   
   let user_id = generateRandomString();
   let sameEmail = false;
+  let hashedPassword = bcrypt.hashSync(req.body.password,10);
   for (let key in users){
     let value = users[key];
     if (value.email === req.body.email){
@@ -206,7 +208,7 @@ app.post("/register", (req, res) => {
     users[user_id] ={
       id: user_id,
       email: req.body.email,
-      password: req.body.password
+      password: hashedPassword
     }
     res.cookie('user_id',user_id);
     res.redirect("/urls");

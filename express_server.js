@@ -1,15 +1,20 @@
+var cookieSession = require('cookie-session')
 var express = require("express");
-var cookieParser = require('cookie-parser')
 const bcrypt = require('bcrypt');
 var app = express();
 var PORT = 8080; // default port 8080
 
-app.use(cookieParser())
 app.set("view engine", "ejs")
 
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1'],
 
+  // Cookie Options
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+}))
 
 let urlDatabase = { 
   "test01":{
@@ -40,11 +45,11 @@ let urlDatabase = {
 app.use(function(req, res, next){
   let loginUrls = {};
   for (element in urlDatabase){
-    if (urlDatabase[element].id === req.cookies["user_id"]){
+    if (urlDatabase[element].id === req.session.user_id){
       loginUrls[element]=urlDatabase[element];
     }
   } 
-  res.locals.user = users[req.cookies["user_id"]];
+  res.locals.user = users[req.session.user_id];
   res.locals.urls = loginUrls;
   
   next();
@@ -89,7 +94,7 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  if (req.cookies.user_id){
+  if (req.session.user_id){
     res.render("urls_new");
   }else{
     res.redirect("/login");
@@ -104,8 +109,8 @@ app.get("/login", (req, res) => {
 
 
 app.get("/urls/:id", (req, res) => {
-  if (req.cookies.user_id){
-    if (urlDatabase[req.params.id].id === req.cookies.user_id){
+  if (req.session.user_id){
+    if (urlDatabase[req.params.id].id === req.session.user_id){
       let templateVars = { 
         shortURL: req.params.id, 
         longURL: urlDatabase[req.params.id].url,
@@ -132,7 +137,7 @@ app.get("/register", (req, res) => {
 app.post("/urls", (req, res) => {
   let shortU = generateRandomString();
   urlDatabase[shortU]={
-    id: req.cookies.user_id,
+    id: req.session.user_id,
     url: req.body.longURL
   }
   
@@ -147,7 +152,7 @@ app.post("/urls/:id/delete", (req, res) => {
 });
 
 app.post("/urls/:id", (req, res) => {
-  if (req.cookies.user_id){
+  if (req.session.user_id){
     urlDatabase[req.params.id].url = req.body.longURL;
     res.redirect("/urls");
   }else{
@@ -177,7 +182,7 @@ app.post("/login", (req, res) => {
         }
     }
     if(flag){
-      res.cookie("user_id",foundUser.id)
+      req.session.user_id = foundUser.id;
       res.redirect("/urls");
       
     } else{
@@ -210,7 +215,7 @@ app.post("/register", (req, res) => {
       email: req.body.email,
       password: hashedPassword
     }
-    res.cookie('user_id',user_id);
+    req.session.user_id = user_id;
     res.redirect("/urls");
   }
 });

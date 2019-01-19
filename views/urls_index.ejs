@@ -3,24 +3,35 @@
 <head>
   <title>urls_index</title>
 </head>
-<body>
+<body style="font-size:20px; padding:50px;">
   <% include ./partials/_header.ejs %>
+  <form method="get" action="/urls/new">
+    <button>new</button>
+  </form>
   <table border='1'> 
     <% for(let element in urls) { %>
-      <tr> 
-        <td><%= element %></td>
-        <td><%= urls[element]%></td>
-        <td>
-            <form method="get">
-              <a href="/urls/<%= element%>">edit</a>
-            </form>
-        </td>
-        <td>
-            <form method="POST" action="/urls/<%= element%>/delete">
-              <button>delete</button>
-            </form>
-        </td>
-      </tr>
+       
+        <tr>
+          <td><%= element %></td>
+          
+          <td><%= urls[element].url%></td>
+          <td>
+            
+              <form method="get">
+                  <% if (user){%>
+                    <a href="/urls/<%= element%>">edit</a>
+                  <%}%>
+                </form>
+            
+          </td>
+          <td>
+              <form method="POST" action="/urls/<%= element%>/delete">
+                <button>delete</button>
+              </form>
+          </td>
+        </tr>
+
+      
     <% } %>
   </table>
   

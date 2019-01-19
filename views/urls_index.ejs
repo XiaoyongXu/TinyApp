@@ -11,11 +11,10 @@
   <table border='1'> 
     <% for(let element in urls) { %>
        
-        <% for(let index of urls[element].url){%>
         <tr>
           <td><%= element %></td>
           
-          <td><%= index%></td>
+          <td><%= urls[element].url%></td>
           <td>
             
               <form method="get">
@@ -31,7 +30,7 @@
               </form>
           </td>
         </tr>
-      <%}%>
+
       
     <% } %>
   </table>

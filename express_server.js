@@ -11,34 +11,38 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 
 let urlDatabase = { 
-  "b2xVn2":{
-    id:"b2xVn2",
-    url: ["http://www.lighthouselabs.ca"]
+  "test01":{
+    id: "tony258",
+    url: 'www.google.ca'
   },
-  "9sm5xK": {
-    id:"9sm5xK",
-    url:["http://www.google.com"]
+  "test02":{
+    id: "tony258",
+    url: 'www.yahoo.com'
   },
-  "tony25":{
-    id: "tony25",
-    url:["www.123.com"]
+  "test03":{
+    id: "tonyx158",
+    url:"www.example.com"
   }
-
 }
 
+// function urlsForUser(userId){
+//   let urlsForUser = {};
+//   for (element in urlDatabase){
+//     if (urlDatabase[element].id === userID){
+//       urlsForUser[element] = urlDatabase[element];
+//     }
+//   }
+//   return urlsForUser;
+// }
 
 
 app.use(function(req, res, next){
   let loginUrls = {};
   for (element in urlDatabase){
-    // console.log("element: ", element,"req.cook: ",req.cookies["user_id"]);
-    if (element === req.cookies["user_id"]){
-      loginUrls[req.cookies["user_id"]]=urlDatabase[element];
+    if (urlDatabase[element].id === req.cookies["user_id"]){
+      loginUrls[element]=urlDatabase[element];
     }
-
-    
   } 
-  // console.log(loginUrls);
   res.locals.user = users[req.cookies["user_id"]];
   res.locals.urls = loginUrls;
   
@@ -56,8 +60,8 @@ let users = {
     email: "user2@example.com", 
     password: "123"
   },
-  "tony25": {
-    id:"tony25",
+  "tony258": {
+    id:"tony258",
     email: "tonyx258@foxmail.com",
     password: "123"
   }
@@ -84,7 +88,7 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  if (req.cookies){
+  if (req.cookies.user_id){
     res.render("urls_new");
   }else{
     res.redirect("/login");
@@ -99,24 +103,25 @@ app.get("/login", (req, res) => {
 
 
 app.get("/urls/:id", (req, res) => {
-  let templateVars = { 
-    shortURL: req.params.id, 
-    longURL: urlDatabase[req.params.id].url,
-  };
-  // console.log(templateVars.longURL);
-  res.render("urls_show", templateVars);
-});
-
-app.get("/u/:shortURL", (req, res) => {
-  if (urlDatabase[req.params]!==undefined){
-    let longURL = urlDatabase[req.params.shortURL];
-    // console.log(longURL, req.params);
-
-    res.redirect(longURL);
+  if (req.cookies.user_id){
+    if (urlDatabase[req.params.id].id === req.cookies.user_id){
+      let templateVars = { 
+        shortURL: req.params.id, 
+        longURL: urlDatabase[req.params.id].url,
+      };
+      res.render("urls_show", templateVars);
+    }else{
+      res.send("please enter a vaild shortURL");
+    }
   }else{
-    res.send('not vaild');
+    res.send("please login first");
   }
   
+});
+
+app.get("/u/:id", (req, res) => {
+  let longU = 'http://'+ urlDatabase[req.params.id].url;
+  res.redirect(longU);
 });
 
 app.get("/register", (req, res) => {
@@ -124,23 +129,25 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  // console.log(req.body.longURL);  // debug statement to see POST parameters
-  urlDatabase[req.cookies.user_id].url.push(req.body.longURL);
-  // console.log(urlDatabase);
-  res.redirect("/urls/"+req.cookies.user_id);        // Respond with 'Ok' (we will replace this)
+  let shortU = generateRandomString();
+  urlDatabase[shortU]={
+    id: req.cookies.user_id,
+    url: req.body.longURL
+  }
+  
+  res.redirect("/urls/" + shortU);        // Respond with 'Ok' (we will replace this)
 });
 
 app.post("/urls/:id/delete", (req, res) => {
   let i = req.params.id;
-  console.log(i);
   delete urlDatabase[i];
   
   res.redirect("/urls/");         // Respond with 'Ok' (we will replace this)
 });
 
 app.post("/urls/:id", (req, res) => {
-  if (req.cookies){
-    urlDatabase[req.params.id].url[1] = req.body.longURL;
+  if (req.cookies.user_id){
+    urlDatabase[req.params.id].url = req.body.longURL;
     res.redirect("/urls");
   }else{
     redirect("/urls");
@@ -201,7 +208,6 @@ app.post("/register", (req, res) => {
       email: req.body.email,
       password: req.body.password
     }
-    //console.log(users);
     res.cookie('user_id',user_id);
     res.redirect("/urls");
   }

@@ -4,9 +4,9 @@
     <title>user_login</title>
   </head>
   <body style="font-size:20px; padding:50px;">
-    <% include partials/_header %>
+    
     <form action="/login" method="POST" style="margin:150px;">
-      <table>
+      <table align="center">
           <tr>
               <td>
                 <label for email>Enter username(email):</label>
@@ -16,16 +16,18 @@
             <tr>
               <td>
                 <label for email>Enter password:</label>
-                <input type="password" name="password" style="width: 300px">  
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <button>login</button>
+                <input type="password" name="password" style="width: 360px">  
               </td>
             </tr>
       </table>
-      
+      <div style="text-align: center">
+        <td>
+          <button style="font-size:100%;">login</button>
+        </td>
+      </div>
+      <div style="text-align: center">
+        <p>Do not have an account? Clike <a href="/register">register</a></p>
+      </div>
       
     </form>
   </body>

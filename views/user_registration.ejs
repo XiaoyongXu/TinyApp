@@ -4,13 +4,31 @@
     <title>user_registration</title>
   </head>
   <body style="font-size:20px; padding:50px;">
-    <% include partials/_header %>
-    <form action="/register" method="POST" style="margin:150px;">
-      <label for email>Enter username(email):</label>
-      <input type="email" name="email" style="width: 300px">
-      <label for email>Enter password:</label>
-      <input type="password" name="password" style="width: 300px">
-      <button>register</button>
-    </form>
-  </body>
+      <form action="/register" method="POST" style="margin:150px;">
+        <table align="center">
+            <tr>
+                <td>
+                  <label for email>Enter username(email):</label>
+                  <input type="email" name="email" style="width: 300px">
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label for email>Enter password:</label>
+                  <input type="password" name="password" style="width: 360px">  
+                </td>
+              </tr>
+              
+        </table>
+        <div style="text-align: center">
+          <td>
+            <button style="font-size:100%;">register</button>
+          </td>
+        </div>
+        <div style="text-align: center">
+          <p>Already have an account? Clike <a href="/login">login</a></p>
+        </div>
+        
+      </form>
+    </body>
 </html>

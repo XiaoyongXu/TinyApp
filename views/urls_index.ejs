@@ -5,35 +5,34 @@
 </head>
 <body style="font-size:20px; padding:50px;">
   <% include ./partials/_header.ejs %>
-  <form method="get" action="/urls/new">
-    <button>new</button>
-  </form>
-  <table border='1'> 
-    <% for(let element in urls) { %>
-       
-        <tr>
-          <td><%= element %></td>
-          
-          <td><%= urls[element].url%></td>
-          <td>
-            
-              <form method="get">
-                  <% if (user){%>
-                    <a href="/urls/<%= element%>">edit</a>
-                  <%}%>
-                </form>
-            
-          </td>
-          <td>
-              <form method="POST" action="/urls/<%= element%>/delete">
-                <button>delete</button>
-              </form>
-          </td>
-        </tr>
-
-      
-    <% } %>
-  </table>
   
+  <div style="font-size:20px;">
+      <table border="1" align="center">
+          <% if (user){%>
+            <div style="text-align: center">
+              <form method="get" action="/urls/new">
+                <button style="font-size:20px;">Create new Url</button>
+              </form>
+            </div>
+            <% for(let element in urls) { %>
+              <tr>
+                <td><a>URL_ID: </a></short><%= element %></td>
+                
+                <td><a></a><%= urls[element].url%></td>
+                <td>
+                    <form method="get">
+                          <a href="/urls/<%= element%>">edit</a>
+                      </form>
+                </td>
+                <td>
+                    <form method="POST" action="/urls/<%= element%>/delete">
+                      <button>delete</button>
+                    </form>
+                </td>
+              </tr>
+            <% } %>
+          <% } %>
+        </table>
+  </div>
 </body>
 </html>

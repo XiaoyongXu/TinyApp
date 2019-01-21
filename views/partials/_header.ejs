@@ -1,11 +1,17 @@
-<a href="/register">Register</a>
-<% if(!user){%>
-  <form method = "get" action = "/login">
-    <input type = "submit" value = "login" />
-  </form>
-<%}else{%>
-  <form method = "POST" action = "/logout">
-    <%= user.id%>
-    <input type = "submit" value = "logout" />
-  </form>
-<%}%>
+<div style="color:black;text-align:center;">
+  <h2>Welcome to TinyApp</h2>
+</div>
+
+<div style="color:black;text-align:center;">
+  <% if(!user){%>
+    <h3>
+      <a>Please <a href="/login">login</a> first.</a>
+    </h3>
+  <%}else{%>
+    <form method = "POST" action = "/logout">
+      <h3>userID: <%= user.id%> <input type = "submit" value = "logout"  style="font-size:40px;"/>
+      </h3>
+      
+    </form>
+  <%}%>
+</div>

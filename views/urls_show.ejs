@@ -4,17 +4,19 @@
   <title>urls_show</title>
 </head>
 <body style="font-size:20px; padding:50px;">
-    <% include ./partials/_header.ejs %>
-    <table> 
-          <tr> 
-            <td>ShortURL: <%=shortURL%></td>
-          </tr>
-    </table>
-    
-    <form method="POST" action="/urls/<%=shortURL%>" >
-      <lable for longtURL>longURL</lable>
-      <input type = "text", name ="longURL">
-      <button>update</button>
-    </form>
+  <div style="text-align: center">
+      <% include ./partials/_header.ejs %>
+      <table align="center""> 
+            <tr> 
+              <td>URL_ID: <%=shortURL%></td>
+            </tr>
+      </table>
+      
+      <form method="POST" action="/urls/<%=shortURL%>" >
+        <lable for longtURL>new URL</lable>
+        <input type = "text", name ="longURL">
+        <button>update</button>
+      </form>
+  </div>  
 </body>
 </html>

@@ -7,7 +7,7 @@ TinyApp is a full stack web application built with Node and Express that allows 
 ![&quot;screenshot of urls-page&quot;](https://github.com/XiaoyongXu/TinyApp/blob/master/docs/urls-page.png?raw=true)
 ![&quot;screenshot of login-page&quot;](https://github.com/XiaoyongXu/TinyApp/blob/master/docs/login-page.png?raw=true)
 ![&quot;screenshot of register-page&quot;](https://github.com/XiaoyongXu/TinyApp/blob/master/docs/register-page.png?raw=true)
-![&quot;screenshot of url-edit-page&quot;](https://github.com/XiaoyongXu/TinyApp/blob/master/docs/edit-page.png?raw=true)
+![&quot;screenshot of url&quot;](https://github.com/XiaoyongXu/TinyApp/blob/master/docs/edit-page.png?raw=true)
 
 
 ## Dependencies
